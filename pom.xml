@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.example</groupId>
+    <artifactId>DockerApp</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>DockerApp</name>
+    <description>DemoDockerApp project for Spring Boot</description>
+    <properties>
+        <java.version>21</java.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.glassfish.maven.plugin</groupId>
+                <artifactId>maven-glassfish-plugin</artifactId>
+                <version>2.2</version> <!-- Kullanılabilir en son sürümü kontrol edin -->
+                <configuration>
+                    <glassfishDirectory>C:\Users\alper\glassfish\glassfish</glassfishDirectory> <!-- Glassfish sunucusunun kurulu olduğu dizin -->
+                    <user>admin</user> <!-- Glassfish yönetici kullanıcı adı -->
+                    <passwordFile>C:\Users\alper\glassfish\glassfish\domains\domain1\config\master-password</passwordFile> <!-- Glassfish yönetici parola dosyasının yolu -->
+                    <domain>
+                        <name>domain1</name> <!-- Glassfish domain adı -->
+                        <host>localhost</host> <!-- Glassfish sunucusunun çalıştığı ana bilgisayar -->
+                        <adminPort>4848</adminPort> <!-- Glassfish yönetim portu -->
+                        <httpPort>8080</httpPort> <!-- Glassfish HTTP portu -->
+                    </domain>
+                    <components>
+                        <component>
+                            <name>${project.build.finalName}.war</name> <!-- Projeyi Glassfish sunucusuna nasıl dağıtmak istediğinizi belirtin -->
+                            <artifact>${project.build.directory}/${project.build.finalName}.war</artifact> <!-- Projeyi dağıtılacak war dosyasının yolu -->
+                        </component>
+                    </components>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,3 @@
+com\example\DockerApp\DockerAppApplication.class
+Controller\MainController.class
+Controller\CustomErrorController.class
