@@ -13,8 +13,8 @@ pipeline {
         stage('Stop and Remove Existing Container') {
             steps {
                 script {
-                    bat 'docker stop dockerapp'
-                    bat 'docker rm dockerapp'
+                    bat 'docker stop DockerApp'
+                    bat 'docker rm DockerApp'
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
         stage('Push image to Hub') {
             steps {
                 script {
-                    docker.image("demo12:${env.BUILD_NUMBER}").run("-d -p 4444:80 --name dockerapp")
+                    docker.image("demo12:${env.BUILD_NUMBER}").run("-d -p 4444:80 --name DockerApp")
                 }
             }
         }
