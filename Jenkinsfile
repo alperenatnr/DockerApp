@@ -1,47 +1,35 @@
 pipeline {
     agent any
-    
-    environment {
-        DOCKER_IMAGE = 'dockerapp'
-        DOCKER_CONTAINER_NAME = 'DockerApp'
-        DOCKER_PORT_MAPPING = '4444:80'
+    tools {
+        maven 'Maven'
     }
-    
     stages {
         stage('Build Maven') {
-            tools {
-                maven 'Maven' // Maven kurulumunu belirtin
-            }
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'main']], userRemoteConfigs: [[url: 'https://github.com/alperenatnr/DockerApp']]])
-                sh 'mvn clean install' // Maven projesini derle
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/alperenatnr/DockerApp']]])
+                bat 'mvn clean install'
             }
         }
-        
-        stage('Build Docker image') {
+        stage('Stop and Remove Existing Container') {
             steps {
                 script {
-                    docker.build("${env.DOCKER_IMAGE}:${env.BUILD_NUMBER}") // Docker imajını oluştur
+                    bat 'docker stop dockerapp'
+                    bat 'docker rm dockerapp'
                 }
             }
         }
-        
-        stage('Run Docker container') {
+        stage('Build docker image') {
             steps {
                 script {
-                    docker.image("${env.dockerapp}:${env.BUILD_NUMBER}").run("-d -p ${env.DOCKER_PORT_MAPPING} --name ${env.dockerapp}") // Docker konteynerını çalıştır
+                    docker.build("dockerapp:${env.BUILD_NUMBER}")
                 }
             }
         }
-    }
-    
-    post {
-        always {
-            // Jenkins işlemi bittiğinde her zaman çalışacak adımlar
-            // Örneğin, Docker konteynerını durdurabiliriz
-            script {
-                docker.stop("${env.dockerapp}") // Docker konteynerını durdur
-                docker.remove("${env.dockerapp}") // Docker konteynerını kaldır
+        stage('Push image to Hub') {
+            steps {
+                script {
+                    docker.image("dockerapp:${env.BUILD_NUMBER}").run("-d -p 4444:80 --name dockerapp")
+                }
             }
         }
     }
